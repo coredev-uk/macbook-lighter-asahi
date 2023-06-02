@@ -25,7 +25,11 @@ else
     # Override the screen and kbd dir
     screen_file=/sys/class/backlight/apple-panel-b1/brightness
     kbd_file=$asahi_dir
-    lid_file=/sys/class/nvme/nvme0/cntlid
+    lid_file=/sys/class/nvme/nvme0/cntlid # dk if this works either
+    power_file=/sys/class/power_supply/macsmc-ac/online
+    # Dont know the following:
+    # light_file=
+
 fi
 
 #####################################################
