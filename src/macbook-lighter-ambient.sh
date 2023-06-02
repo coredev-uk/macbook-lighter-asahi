@@ -2,6 +2,7 @@
 
 intel_dir=/sys/class/backlight/intel_backlight
 kbd_dir=/sys/class/leds/smc::kbd_backlight
+asahi_dir=/sys/class/leds/kbd_backlight
 
 power_file=/sys/class/power_supply/ADP1/online
 screen_file=$intel_dir/brightness
@@ -12,11 +13,20 @@ light_file="/sys/devices/platform/applesmc.768/light"
 #####################################################
 # wait drivers loaded
 
-$ML_DEBUG && echo checking $intel_dir and $kbd_dir...
-while [ ! -d $intel_dir -o ! -d $kbd_dir ]; do
-    sleep 1
-done
-screen_max=$(cat $intel_dir/max_brightness)
+# Check if asahi dir exists
+if [ ! -d $asahi_dir ]; then
+    $ML_DEBUG && echo checking $intel_dir and $kbd_dir...
+    while [ ! -d $intel_dir -o ! -d $kbd_dir ]; do
+        sleep 1
+    done
+    screen_max=$(cat $intel_dir/max_brightness)
+else
+    $ML_DEBUG && echo dir $asahi_dir exists, using it
+    # Override the screen and kbd dir
+    screen_file=/sys/class/backlight/apple-panel-b1/brightness
+    kbd_file=$asahi_dir
+    lid_file=/sys/class/nvme/nvme0/cntlid
+fi
 
 #####################################################
 # Settings
